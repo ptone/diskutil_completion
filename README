@@ -1,0 +1,21 @@
+This is a completion file and python script to aid in the usage of darwin's diskutil command.
+
+The combination is used because it is far more pleasant to write the completion logic in Python than in Bash
+
+To instal and use:
+
+copy the diskutil_completion file anywhere on your hardrive for example /usr/local/etc
+
+copy the complete_diskutil.py script somewhere on your path (/usr/local/bin) and make sure its executable 
+
+add the following line to your .bashrc file:
+
+. /usr/local/etc/diskutil_completion
+
+source your .bashrc folder, or just open a new terminal window for it to take effect
+
+A couple quick notes:
+
+To improve the performance of the disk listing, I experimented with a caching of the disk info - its disabled by default as it only speeds subsequent listings which in use aren't really needed.  To enable set the flag at the top of the script
+
+diskutil is unorthodox for bash in that some parameters (namely format) contain spaces.  I try to work around that best I can, but there are still a couple oddities.

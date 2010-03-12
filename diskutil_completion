@@ -1,0 +1,33 @@
+_diskutilcomplete() 
+{   
+    COMPREPLY=( $( COMP_WORDS="${COMP_WORDS[*]}" \
+                   COMP_CWORD=$COMP_CWORD \
+	               complete_diskutil.py ) )
+    local escaped_single_qoute="'\''"
+    local i=0
+    for entry in ${COMPREPLY[*]}
+    do
+        if [[ "${cur:0:1}" == "'" ]] 
+        then
+                # started with single quote, escaping only other single quotes
+                # [']bla'bla"bla\bla bla --> [']bla'\''bla"bla\bla bla
+                COMPREPLY[$i]="${entry//\'/${escaped_single_qoute}}" 
+        elif [[ "${cur:0:1}" == "\"" ]] 
+        then
+                # started with double quote, escaping all double quotes and all backslashes
+                # ["]bla'bla"bla\bla bla --> ["]bla'bla\"bla\\bla bla
+                entry="${entry//\\/\\\\}" 
+                COMPREPLY[$i]="${entry//\"/\\\"}" 
+        else 
+                # no quotes in front, escaping _everything_
+                # [ ]bla'bla"bla\bla bla --> [ ]bla\'bla\"bla\\bla\ bla
+                entry="${entry//\\/\\\\}" 
+                entry="${entry//\'/\'}" 
+                entry="${entry//\"/\\\"}" 
+                COMPREPLY[$i]="${entry//_/ }"
+        fi
+        (( i++ ))
+    done
+}
+complete -F _diskutilcomplete diskutil
+
